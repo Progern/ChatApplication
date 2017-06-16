@@ -80,7 +80,18 @@ class AnimationHelper {
             colorAnim.start()
 
         }
+
+        /**
+         * Modified and longer version of fade in animation
+         * Made special for splash screen image
+         */
+        public fun splashScreenFadeInAnimation(activity: Activity) : Animation {
+            return AnimationUtils.loadAnimation(activity, R.anim.fade_in_long)
+        }
     }
+
+
+
 
 
 }
