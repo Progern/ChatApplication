@@ -11,6 +11,7 @@ import com.example.binariksoleh.chatapplication.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login_or_sign_up.*
 import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
 
 class LoginOrSignUpActivity : AppCompatActivity() {
@@ -38,11 +39,12 @@ class LoginOrSignUpActivity : AppCompatActivity() {
                  * User is signed in
                  * Load next Activity
                  */
+                startActivity(intentFor<ChatActivity>())
 
             }
         }
 
-        
+
         signUpText.setOnClickListener {
             actionFlag = true
             AnimationHelper.changeImageWithFadeAnimation(this, topImage, actionFlag)
@@ -92,6 +94,7 @@ class LoginOrSignUpActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     progressDialog.dismiss()
                     toast("Registration successful.")
+                    startActivity(intentFor<ChatActivity>())
                 }
 
                 .addOnFailureListener {
@@ -113,6 +116,7 @@ class LoginOrSignUpActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     progressDialog.dismiss()
                     toast("Logged in successfully.")
+                    startActivity(intentFor<ChatActivity>())
 
                 }
 
