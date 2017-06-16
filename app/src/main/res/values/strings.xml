@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ChatApplication</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="password_edittext_hint">Password</string>
+    <string name="email_adress_edittext_hint">Email adress</string>
+</resources>

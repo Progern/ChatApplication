@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "662235753984",
+    "firebase_url": "https://chatapplication-c9210.firebaseio.com",
+    "project_id": "chatapplication-c9210",
+    "storage_bucket": "chatapplication-c9210.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662235753984:android:870d030a2dab36ac",
+        "android_client_info": {
+          "package_name": "com.example.binariksoleh.chatapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "662235753984-af5tf5m4ks305mo763bdrnol0tg1usla.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.binariksoleh.chatapplication",
+            "certificate_hash": "ec1bf553bdc8cec9d1d369f6fd94dcea12500161"
+          }
+        },
+        {
+          "client_id": "662235753984-j9trigjnd01okd4hegs9v3k3g4jtea8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCos6gQfi0jGRF0EoL_LNbm6uyaCPydaT8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "662235753984-j9trigjnd01okd4hegs9v3k3g4jtea8a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
