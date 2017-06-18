@@ -2,8 +2,8 @@ package com.example.binariksoleh.chatapplication.Activity
 
 import android.app.ProgressDialog
 import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import com.example.binariksoleh.chatapplication.Helper.ActivityHelper
 import com.example.binariksoleh.chatapplication.Helper.AnimationHelper
 import com.example.binariksoleh.chatapplication.Helper.CredentialsVerifier
@@ -27,22 +27,22 @@ class LoginOrSignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login_or_sign_up)
         signInText.setTextColor(Color.GRAY)
         firebaseAuthenticationManager = FirebaseAuth.getInstance()
-        firebaseAuthListener = FirebaseAuth.AuthStateListener {
-            val user = firebaseAuthenticationManager.currentUser
 
-            if (user == null) {
-                /**
-                 * User is signed out
-                 */
-            } else {
-                /**
-                 * User is signed in
-                 * Load next Activity
-                 */
-                startActivity(intentFor<ChatActivity>())
+        val user = firebaseAuthenticationManager.currentUser
 
-            }
+        if (user == null) {
+            /**
+             * User is signed out
+             */
+        } else {
+            /**
+             * User is signed in
+             * Load next Activity
+             */
+            startActivity(intentFor<ChatActivity>())
+
         }
+
 
 
         signUpText.setOnClickListener {
@@ -127,6 +127,5 @@ class LoginOrSignUpActivity : AppCompatActivity() {
 
 
     }
-
 
 }

@@ -1,30 +1,29 @@
 package com.example.binariksoleh.chatapplication.Activity
 
+import android.app.Activity
 import android.app.ProgressDialog
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.example.binariksoleh.chatapplication.Helper.FilePicker
+import com.example.binariksoleh.chatapplication.Helper.FirebaseHelper
 import com.example.binariksoleh.chatapplication.Model.ChatMessage
 import com.example.binariksoleh.chatapplication.R
 import com.firebase.ui.database.FirebaseListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import droidninja.filepicker.FilePickerConst
 import kotlinx.android.synthetic.main.activity_chat.*
+import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.toast
-import kotlinx.android.synthetic.main.list_item.*
-import org.jetbrains.anko.indeterminateProgressDialog
+import java.text.SimpleDateFormat
 import java.util.*
-import droidninja.filepicker.FilePickerConst
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
-import android.util.Log
-import com.google.firebase.storage.FirebaseStorage
-import org.jetbrains.anko.storageManager
-import java.io.File
 import kotlin.collections.ArrayList
 
 
@@ -34,8 +33,6 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var firebaseStorage: FirebaseStorage
     private lateinit var progressDialog: ProgressDialog
     private lateinit var filePicker: FilePicker
-    private lateinit var photoPaths: ArrayList<String>
-    private lateinit var filePaths: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,16 +40,22 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
         toast("Welcome, " + FirebaseAuth.getInstance().currentUser?.email + " !")
         progressDialog = indeterminateProgressDialog("Loading chat…")
+        progressDialog.show()
 
         filePicker = FilePicker()
         firebaseStorage = FirebaseStorage.getInstance()
 
-        displayChatMessages()
-
+        getChatMessagesFromFirebaseAndPopulateThem()
 
         send_message.onClick {
-            FirebaseDatabase.getInstance().reference.push().setValue(ChatMessage(messageField.text.toString(), FirebaseAuth.getInstance().currentUser?.email.toString()))
-            messageField.text.clear()
+            if (messageField.text.isEmpty()) {
+                YoYo.with(Techniques.Shake)
+                        .duration(500)
+                        .playOn(messageField)
+            } else {
+                FirebaseDatabase.getInstance().reference.push().setValue(ChatMessage(messageField.text.toString(), FirebaseAuth.getInstance().currentUser?.email.toString()))
+                messageField.text.clear()
+            }
         }
 
         attach_file.onClick {
@@ -63,51 +66,31 @@ class ChatActivity : AppCompatActivity() {
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             FilePickerConst.REQUEST_CODE_PHOTO -> if (resultCode == Activity.RESULT_OK && data != null) {
-                photoPaths = ArrayList()
+                val photoPaths = ArrayList<String>()
                 photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA))
-                for (string in photoPaths) {
-                    val fileUri = Uri.fromFile(File(string))
-                    val uploadTask = firebaseStorage.reference.child(FirebaseAuth.getInstance().currentUser?.email + "/" + fileUri).putFile(fileUri)
-                    uploadTask.addOnFailureListener {
-                        Log.d("MY_LOG", "Failed to load photo")
-                    }
+                FirebaseHelper.loadPhotos(this, firebaseStorage, photoPaths)
 
-                    uploadTask.addOnSuccessListener {
-                        Log.d("MY_LOG", "Succeeded to load photo")
-                    }
-                }
             }
             FilePickerConst.REQUEST_CODE_DOC -> if (resultCode == Activity.RESULT_OK && data != null) {
-                filePaths = ArrayList()
+                val filePaths = ArrayList<String>()
                 filePaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS))
-                for (string in filePaths) {
-                    val fileUri = Uri.fromFile(File(string))
-                    val uploadTask = firebaseStorage.reference.child(FirebaseAuth.getInstance().currentUser?.email + "/" + fileUri).putFile(fileUri)
-                    uploadTask.addOnFailureListener {
-                        Log.d("MY_LOG", "Failed to load file")
-                    }
-
-                    uploadTask.addOnSuccessListener {
-                        Log.d("MY_LOG", "Succeeded to load file")
-                    }
-                }
-
+                FirebaseHelper.loadFiles(this, firebaseStorage, filePaths)
             }
         }
 
     }
 
-    private fun displayChatMessages() {
+    private fun getChatMessagesFromFirebaseAndPopulateThem() {
         progressDialog.show()
-        adapter = object : FirebaseListAdapter<ChatMessage>(this, ChatMessage::class.java, R.layout.list_item, FirebaseDatabase.getInstance().reference) {
-
+        adapter = object : FirebaseListAdapter<ChatMessage>(this, ChatMessage::class.java, R.layout.chat_message_outcoming, FirebaseDatabase.getInstance().reference) {
 
             override fun populateView(v: View, model: ChatMessage, position: Int) {
+                //TODO: Write custom adapter
 
                 val messageText: TextView = v.findViewById(R.id.message_text) as TextView
                 val messageUser: TextView = v.findViewById(R.id.message_user) as TextView
                 val messageTime: TextView = v.findViewById(R.id.message_time) as TextView
-                val dateFormat = android.text.format.DateFormat.getDateFormat(applicationContext)
+                val dateFormat = SimpleDateFormat.getDateTimeInstance()
 
                 messageText.text = model.text
                 messageUser.text = model.user
@@ -119,4 +102,5 @@ class ChatActivity : AppCompatActivity() {
         messagesList.adapter = adapter
         progressDialog.dismiss()
     }
+
 }
