@@ -37,6 +37,7 @@ dependencies {
     compile 'com.daimajia.androidanimations:library:2.2@aar'
     compile 'com.firebaseui:firebase-ui:2.0.1'
     compile 'com.droidninja:filepicker:2.0.4'
+    compile 'com.yarolegovich:lovely-dialog:1.0.7'
     testCompile 'junit:junit:4.12'
 }
 

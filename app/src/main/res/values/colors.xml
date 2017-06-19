@@ -10,4 +10,6 @@
     <color name="divider">#B0D7FF</color>
     <color name="unactive_textview">#AFBED1</color>
     <color name="active_textview">#FFFFFF</color>
+    <color name="selected_message">#85EAE8FF</color>
+    <color name="white_message">#FFFFFF</color>
 </resources>

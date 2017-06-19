@@ -1,5 +1,8 @@
 package com.example.binariksoleh.chatapplication.Config
 
-/**
- * Created by Oleg on 18.06.2017.
- */
+class AppConstants {
+    companion object {
+        val OUTCOMING_MESSAGE = 0
+        val INCOMING_MESSAGE = 1
+    }
+}
