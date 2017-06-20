@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import com.example.binariksoleh.chatapplication.Helper.ActivityHelper
 import com.example.binariksoleh.chatapplication.Helper.FilePicker
 import com.example.binariksoleh.chatapplication.Helper.FirebaseChatHelper
 import com.example.binariksoleh.chatapplication.Model.MessageModel
@@ -30,8 +29,9 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ActivityHelper.hideStatusBar(this)
         setContentView(R.layout.activity_chat)
+        //TODO: Get chat room from preferences
+        title = ""
 
 
         filePicker = FilePicker()

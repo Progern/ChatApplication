@@ -4,12 +4,12 @@ import android.app.ProgressDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.example.binariksoleh.chatapplication.Helper.ActivityHelper
-import com.example.binariksoleh.chatapplication.Helper.AnimationHelper
-import com.example.binariksoleh.chatapplication.Helper.CredentialsVerifier
+import com.example.binariksoleh.chatapplication.Helper.*
+import com.example.binariksoleh.chatapplication.Model.UserModel
 import com.example.binariksoleh.chatapplication.R
 import com.example.binariksoleh.chatapplication.View.ChatRoomsActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_login_or_sign_up.*
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.intentFor
@@ -19,7 +19,7 @@ class LoginOrSignUpActivity : AppCompatActivity() {
 
     private var actionFlag: Boolean = true
     private lateinit var firebaseAuthenticationManager: FirebaseAuth
-    private lateinit var firebaseAuthListener: FirebaseAuth.AuthStateListener
+    private lateinit var firebaseUsersReference: DatabaseReference
     private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +28,25 @@ class LoginOrSignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login_or_sign_up)
         signInText.setTextColor(Color.GRAY)
         firebaseAuthenticationManager = FirebaseAuth.getInstance()
+        firebaseUsersReference = FirebaseDatabase.getInstance().getReference("users")
+
+        firebaseUsersReference.addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+
+            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {}
+
+            override fun onChildChanged(p0: DataSnapshot?, p1: String?) {}
+
+            override fun onChildRemoved(p0: DataSnapshot?) {}
+
+            override fun onChildAdded(p0: DataSnapshot?, p1: String?) {
+                val user = FirebaseUsersHelper.getUserDataFromSnapshot(p0!!)
+                if (user.name == FirebaseAuth.getInstance().currentUser?.email) {
+                    SharedPreferencesHelper.setCurrentUserId(p0.key, applicationContext)
+                }
+            }
+
+        })
 
         val user = firebaseAuthenticationManager.currentUser
 
@@ -72,12 +91,16 @@ class LoginOrSignUpActivity : AppCompatActivity() {
                  * Sign up section is active
                  */
                 if (actionFlag) {
+                    val userModel = UserModel("REGISTERED_USER", CredentialsVerifier.validateString(userEmail.text.toString()), arrayListOf("-Kn49mHBgBFOA_zHZHon", "-Kn4PPCPSiSAXzrRW2br"))
+                    firebaseUsersReference.push().setValue(userModel)
                     registerUser(CredentialsVerifier.validateString(userEmail.text.toString()), userPassword.text.toString())
+
                 }
                 /**
                  * Sign in section is active
                  */
                 else {
+                    val userModel = UserModel("REGISTERED_USER", CredentialsVerifier.validateString(userEmail.text.toString()), arrayListOf("-Kn49mHBgBFOA_zHZHon", "-Kn4PPCPSiSAXzrRW2br"))
                     loginUser(CredentialsVerifier.validateString(userEmail.text.toString()), userPassword.text.toString())
                 }
             }
@@ -95,7 +118,7 @@ class LoginOrSignUpActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     progressDialog.dismiss()
                     toast("Registration successful.")
-                    startActivity(intentFor<ChatActivity>())
+                    startActivity(intentFor<ChatRoomsActivity>())
                 }
 
                 .addOnFailureListener {
@@ -117,7 +140,7 @@ class LoginOrSignUpActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     progressDialog.dismiss()
                     toast("Logged in successfully.")
-                    startActivity(intentFor<ChatActivity>())
+                    startActivity(intentFor<ChatRoomsActivity>())
 
                 }
 

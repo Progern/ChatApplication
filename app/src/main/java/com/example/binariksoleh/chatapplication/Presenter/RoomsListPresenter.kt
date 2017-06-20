@@ -12,6 +12,7 @@ import org.jetbrains.anko.onLongClick
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class RoomsListPresenter(val roomsList: ArrayList<RoomModel>) : RecyclerView.Adapter<RoomsListPresenter.RoomsViewHolder>() {
 
 
@@ -57,6 +58,7 @@ class RoomsListPresenter(val roomsList: ArrayList<RoomModel>) : RecyclerView.Ada
                 itemView.room_creation_time.text = SimpleDateFormat.getDateTimeInstance().format(Date(roomModel.createAt))
 
                 itemView.onClick {
+                    //val prefs = itemView.context.getSharedPreferences("com.example.binariksoleh.chatapplication", Context.MODE_PRIVATE)
                     //TODO: Start Room Activity
                 }
 

@@ -15,8 +15,8 @@ class FirebaseRoomsHelper {
          */
         fun getRoomFromDataSnapshot(dataSnapshot: DataSnapshot): RoomModel {
             val child = dataSnapshot.value as HashMap<*, *>?
-            val roomId = child?.get("id") as Long
-            val createAt = child.get("createAt") as Long
+            val roomId = dataSnapshot.key
+            val createAt = child?.get("createAt") as Long
             val createdBy = child.get("createdBy") as String
             val name = child.get("name") as String
 

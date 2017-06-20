@@ -6,6 +6,7 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.EditText
 import com.example.binariksoleh.chatapplication.Helper.FirebaseRoomsHelper
+import com.example.binariksoleh.chatapplication.Helper.SharedPreferencesHelper
 import com.example.binariksoleh.chatapplication.Model.RoomModel
 import com.example.binariksoleh.chatapplication.Presenter.RoomsListPresenter
 import com.example.binariksoleh.chatapplication.R
@@ -18,7 +19,8 @@ import org.jetbrains.anko.*
 class ChatRoomsActivity : AppCompatActivity() {
 
     private lateinit var chatRoomsAdapter: RoomsListPresenter
-    private lateinit var databaseReference: DatabaseReference
+    private lateinit var roomsMetadataReference: DatabaseReference
+    private lateinit var currentUsersRoomsReference: DatabaseReference
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,12 +29,13 @@ class ChatRoomsActivity : AppCompatActivity() {
         title = "Chat rooms"
 
         toast("Welcome back, " + FirebaseAuth.getInstance().currentUser?.email + " !")
-        databaseReference = FirebaseDatabase.getInstance().getReference("room_metadata")
+        currentUsersRoomsReference = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferencesHelper.getCurrentUserId(this))
+        roomsMetadataReference = FirebaseDatabase.getInstance().getReference("room_metadata ")
         chatRoomsAdapter = RoomsListPresenter(ArrayList<RoomModel>())
         val layoutManager = LinearLayoutManager(applicationContext)
         roomsList.adapter = chatRoomsAdapter
         roomsList.layoutManager = layoutManager
-        val dividerItemDecoration = DividerItemDecoration(roomsList.getContext(),
+        val dividerItemDecoration = DividerItemDecoration(roomsList.context,
                 layoutManager.orientation)
         roomsList.addItemDecoration(dividerItemDecoration)
 
@@ -53,8 +56,8 @@ class ChatRoomsActivity : AppCompatActivity() {
                 }
 
                 val positivebutton = positiveButton("OK") {
-                    val newRoom = RoomModel(0, System.currentTimeMillis(), FirebaseAuth.getInstance().currentUser?.email!!, roomName?.text.toString())
-                    databaseReference.push().setValue(newRoom)
+                    val newRoom = RoomModel("DEF_ID", System.currentTimeMillis(), FirebaseAuth.getInstance().currentUser?.email!!, roomName?.text.toString())
+                    roomsMetadataReference.push().setValue(newRoom)
                 }
 
                 val negativeButton = negativeButton("Cancel") {
@@ -74,7 +77,7 @@ class ChatRoomsActivity : AppCompatActivity() {
      * them with RecyclerView
      */
     fun getChatRoomsAndPopulateThem() {
-        databaseReference.addChildEventListener(object : ChildEventListener {
+        roomsMetadataReference.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 toast("Cancelled")
             }
