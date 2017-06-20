@@ -22,7 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".View.BrowserActivity"></activity>
+        <activity android:name=".View.BrowserActivity" />
+        <activity android:name=".View.ChatRoomsActivity"></activity>
     </application>
 
 </manifest>

@@ -12,13 +12,9 @@ import org.jetbrains.anko.toast
 import java.io.File
 import java.util.HashMap
 import kotlin.collections.ArrayList
-import kotlin.collections.List
-import kotlin.collections.firstOrNull
-import kotlin.collections.get
-import kotlin.collections.mapTo
 
 
-class FirebaseHelper {
+class FirebaseChatHelper {
     companion object {
 
         /**
@@ -87,6 +83,7 @@ class FirebaseHelper {
             dataSnapshot.children.mapTo(messagesList) { getMessageFromDataSnapshot(it) }
             return messagesList
         }
+
 
         /**
          * @param dataSnapshot - piece of data that holds message in

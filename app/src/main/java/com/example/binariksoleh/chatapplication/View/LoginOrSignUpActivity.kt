@@ -8,6 +8,7 @@ import com.example.binariksoleh.chatapplication.Helper.ActivityHelper
 import com.example.binariksoleh.chatapplication.Helper.AnimationHelper
 import com.example.binariksoleh.chatapplication.Helper.CredentialsVerifier
 import com.example.binariksoleh.chatapplication.R
+import com.example.binariksoleh.chatapplication.View.ChatRoomsActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login_or_sign_up.*
 import org.jetbrains.anko.indeterminateProgressDialog
@@ -39,7 +40,7 @@ class LoginOrSignUpActivity : AppCompatActivity() {
              * User is signed in
              * Load next Activity
              */
-            startActivity(intentFor<ChatActivity>())
+            startActivity(intentFor<ChatRoomsActivity>())
 
         }
 
